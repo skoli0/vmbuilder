@@ -38,38 +38,8 @@
         "numvcpus": "1",
         "scsi0.virtualdev": "lsisas1068",
         "tools.upgrade.policy": "manual",
-        "virtualHW.version": "8",
         "virtualhw.productcompatibility": "hosted"
       }
-  },
-  {
-    "type": "vmware-vmx",
-    "source_path": "{{user `iso_path`}}",
-    "output_directory": "{{user `out_dir`}}/{{user `image_alias`}}",
-    "headless": false,
-    "boot_wait": "1m",
-    "ssh_username": "{{user `image_username`}}",
-    "ssh_password": "{{user `image_password`}}",
-    "ssh_wait_timeout": "1h",
-    "vm_name": "{{user `image_alias`}}",
-    "shutdown_command": "echo '{{user `image_password`}}' | sudo -S /sbin/halt -h -p",
-    "vmx_data": {
-        "bios.bootOrder": "hdd,cdrom,floppy",
-        "bios.hddOrder": "scsi0:0,ide1:0",
-        "RemoteDisplay.vnc.enabled": "false",
-        "RemoteDisplay.vnc.port": "5985",
-        "displayname": "{{user `displayname`}}",
-        "ethernet0.connectionType": "nat",
-        "ethernet0.present": "TRUE",
-        "ethernet0.virtualDev": "e1000",
-        "guest.commands.allowAnonGuestCommands": "TRUE",
-        "guest.commands.enabled": "TRUE",
-        "memsize": "{{user `ramsize`}}",
-        "numvcpus": "1",
-        "tools.upgrade.policy": "manual",
-        "virtualhw.productcompatibility": "hosted",
-        "virtualhw.version": "8"
-    }
   },
   {
       "type": "virtualbox-iso",
