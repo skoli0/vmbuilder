@@ -29,30 +29,33 @@ def get_args():
     # Return all variable values
     return image, hypervisor, vmuser, vmpass, os, arch, iso
 
-# Run get_args()
-# get_args()
+def main():
+    logging.basicConfig(level=logging.INFO,
+                    format="%(asctime)s - [%(levelname)s] (%(module)s:%(lineno)d) %(message)s", )
+    # Run get_args()
+    # get_args()
+    DEFAULT_HYPERVISOR = "virtualbox"
+    # Match return values from get_arguments()
+    # and assign to their respective variables
+    image, hypervisor, vmuser, vmpass, vmos, vmarch, vmiso = get_args()
 
-# Match return values from get_arguments()
-# and assign to their respective variables
-image, hypervisor, vmuser, vmpass, vmos, vmarch, vmiso = get_args()
-
-# Print the values
-'''
-print("Image type: [ %s ]" % image)
-print("Provider: [ %s ]" % hypervisor)
-print("VM user: [ %s ]" % vmuser)
-print("VM password: [ %s ]" % vmpass)
-print("VM OS: [ %s ]" % vmos)
-print("VM Architecture: [ %s ]" % vmarch)
-print("VM ISO: [ %s ]" % vmiso)
-'''
-logging.info("Image type: [ %s ]" % image)
-logging.info("Provider: [ %s ]" % hypervisor)
-logging.info("VM user: [ %s ]" % vmuser)
-logging.info("VM password: [ %s ]" % vmpass)
-logging.info("VM OS: [ %s ]" % vmos)
-logging.info("VM Architecture: [ %s ]" % vmarch)
-logging.info("VM ISO: [ %s ]" % vmiso)
+    # Print the values
+    '''
+    print("Image type: %s" % image)
+    print("Provider: %s" % hypervisor)
+    print("VM user: %s" % vmuser)
+    print("VM password: %s" % vmpass)
+    print("VM OS: %s" % vmos)
+    print("VM Architecture: %s" % vmarch)
+    print("VM ISO: %s" % vmiso)
+    '''
+    logging.info("Image type: %s" % image)
+    logging.info("Provider: %s" % hypervisor)
+    logging.info("VM user: %s" % vmuser)
+    logging.info("VM password: %s" % vmpass)
+    logging.info("VM OS: %s" % vmos)
+    logging.info("VM Architecture: %s" % vmarch)
+    logging.info("VM ISO: %s" % vmiso)
 
 if __name__ == '__main__':
     main()
