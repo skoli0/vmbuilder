@@ -2,7 +2,7 @@ import sys
 sys.path.append("..")
 from helper.helper import *
 
-# inspiration for this Packer interface for Python is taken from https://github.com/nir0s/python-packer.git
+# inspiration of this Packer interface for Python is taken from https://github.com/nir0s/python-packer.git
 DEFAULT_TEMPLATES_PATH = "templates"
 DEFAULT_SCRIPTS_PATH = "scripts"
 
