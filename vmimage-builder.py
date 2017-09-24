@@ -29,7 +29,7 @@ def get_args():
                         default='vmuser',
                         help='User of VM',
                         metavar='\b')
-    parser.add_argument('-p', '--pass',
+    parser.add_argument('-p', '--password',
                         required=False,
                         type=str,
                         default='vmpass',
