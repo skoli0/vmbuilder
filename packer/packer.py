@@ -72,7 +72,6 @@ class Packer(object):
 
         self._add_opt('-syntax-only' if syntax_only else None)
         self._append_base_arguments()
-        #self._add_opt(self.only)
         self._add_opt(self.packerfile)
         print(self.packer_cmd)
 
