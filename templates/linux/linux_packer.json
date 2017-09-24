@@ -1,0 +1,126 @@
+{
+"builders": [
+  {
+      "type": "vmware-iso",
+      "headless": false,
+      "boot_command": "{{user `boot_cmd`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "guest_os_type": "{{user `guestos`}}",
+      "output_directory": "{{user `out_dir`}}/{{user `image_alias`}}",
+      "vm_name": "{{user `image_alias`}}",
+      "vmdk_name": "{{user `image_alias`}}",
+      "disk_size": "{{user `disksize`}}",
+      "iso_url": "{{user `iso_path`}}",
+      "ssh_username": "{{user `image_username`}}",
+      "ssh_password": "{{user `image_password`}}",
+      "http_directory": "{{user `in_dir`}}",
+      "disk_type_id": 0,
+      "tools_upload_flavor": "linux",
+      "tools_upload_path": "/tmp/vmware_tools_{{.Flavor}}.iso",
+      "skip_compaction": true,
+      "ssh_wait_timeout": "1h",
+      "shutdown_command": "echo '{{user `image_password`}}' | sudo -S /sbin/halt -h -p",
+      "boot_wait": "5s",
+      "vmx_data": {
+        "RemoteDisplay.vnc.enabled": "false",
+        "RemoteDisplay.vnc.port": "5985",
+        "displayname": "{{user `displayname`}}",
+        "ethernet0.Address": "00:50:56:00:00:01",
+        "ethernet0.addressType": "static",
+        "ethernet0.connectionType": "nat",
+        "ethernet0.pciSlotNumber": "17",
+        "ethernet0.present": "TRUE",
+        "ethernet0.virtualDev": "e1000",
+        "ethernet0.wakeOnPcktRcv": "FALSE",
+        "guest.commands.allowAnonGuestCommands": "TRUE",
+        "guest.commands.enabled": "TRUE",
+        "memsize": "{{user `ramsize`}}",
+        "numvcpus": "1",
+        "scsi0.virtualdev": "lsisas1068",
+        "tools.upgrade.policy": "manual",
+        "virtualHW.version": "8",
+        "virtualhw.productcompatibility": "hosted"
+      }
+  },
+  {
+    "type": "vmware-vmx",
+    "source_path": "{{user `iso_path`}}",
+    "output_directory": "{{user `out_dir`}}/{{user `image_alias`}}",
+    "headless": false,
+    "boot_wait": "1m",
+    "ssh_username": "{{user `image_username`}}",
+    "ssh_password": "{{user `image_password`}}",
+    "ssh_wait_timeout": "1h",
+    "vm_name": "{{user `image_alias`}}",
+    "shutdown_command": "echo '{{user `image_password`}}' | sudo -S /sbin/halt -h -p",
+    "vmx_data": {
+        "bios.bootOrder": "hdd,cdrom,floppy",
+        "bios.hddOrder": "scsi0:0,ide1:0",
+        "RemoteDisplay.vnc.enabled": "false",
+        "RemoteDisplay.vnc.port": "5985",
+        "displayname": "{{user `displayname`}}",
+        "ethernet0.connectionType": "nat",
+        "ethernet0.present": "TRUE",
+        "ethernet0.virtualDev": "e1000",
+        "guest.commands.allowAnonGuestCommands": "TRUE",
+        "guest.commands.enabled": "TRUE",
+        "memsize": "{{user `ramsize`}}",
+        "numvcpus": "1",
+        "tools.upgrade.policy": "manual",
+        "virtualhw.productcompatibility": "hosted",
+        "virtualhw.version": "8"
+    }
+  },
+  {
+      "type": "virtualbox-iso",
+      "headless": false,
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "guest_os_type": "{{user `guestos`}}",
+      "output_directory": "{{user `out_dir`}}/{{user `image_alias`}}",
+      "vm_name": "{{user `image_alias`}}",
+      "disk_size": "{{user `disksize`}}",
+      "iso_url": "{{user `iso_path`}}",
+      "ssh_username": "{{user `image_username`}}",
+      "ssh_password": "{{user `image_password`}}",
+      "http_directory": "{{user `in_dir`}}",
+      "ssh_wait_timeout": "1h",
+      "shutdown_command": "echo '{{user `image_password`}}' | sudo -S /sbin/halt -h -p",
+      "boot_wait": "5s",
+      "vboxmanage": [
+      ["modifyvm", "{{.Name}}", "--nic1", "nat"],
+      ["modifyvm", "{{.Name}}", "--memory", "{{user `ramsize`}}"],
+      ["modifyvm", "{{.Name}}", "--cpus", "1"]
+    ]
+  }
+],
+  "provisioners": [
+    {
+      "type": "shell",
+      "execute_command": "echo '{{user `image_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "scripts": [
+        "config-scripts/linux/configure-image.sh"
+      ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '{{user `image_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "scripts": [
+        "config-scripts/linux/cleanup.sh"
+      ]
+    }
+  ],
+  "variables": {
+    "image_username": "image_username",
+    "image_password": "image_password",
+    "guestos": "guest_os_goes_here",
+    "iso_path": "iso_path_goes_here",
+    "iso_checksum_type": "none",
+    "displayname": "image_displayname",
+    "disksize": "disk_size_goes_here",
+    "ramsize": "ram_size_goes_here",
+    "answerfile": "linux_kickstart_config_file_goes_here",
+    "in_dir": "input_directory_goes_here",
+    "out_dir": "output_directory_goes_here",
+    "image_alias": "image_alias_goes_here"
+  }
+}
