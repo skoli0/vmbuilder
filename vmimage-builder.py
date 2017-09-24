@@ -6,15 +6,53 @@ __author__ = 'Sandeep Koli'
 def get_args():
     '''This function parses and return arguments passed in'''
     # Assign description to the help doc
-    parser = argparse.ArgumentParser(description='Script retrieves schedules from a given server', formatter_class=argparse.MetavarTypeHelpFormatter)
+    parser = argparse.ArgumentParser(description='Script retrieves schedules from a given server', add_help=True,
+                                    formatter_class=lambda prog: argparse.HelpFormatter(prog,max_help_position=50))
+    #group = parser.add_mutually_exclusive_group()
+
     # Add arguments
-    parser.add_argument('-i', '--image', type=str, help='VM image type, e.g. vm, vagrant', required=True, metavar='\b')
-    parser.add_argument('-hv', '--hypervisor', type=str, help='Hypervisor, e.g. vmware, virtualbox, hyperv', required=True, metavar='\b')
-    parser.add_argument('-u', '--user', type=str, help='User of VM', required=False, default="vmuser", metavar='\b')
-    parser.add_argument('-p', '--password', type=str, help='Password for VM', required=False, default="vmpass", metavar='\b')
-    parser.add_argument('-o', '--os', type=str, help='OS of VM', required=True, default=None, metavar='\b')
-    parser.add_argument('-a', '--arch', type=str, help='Architecture of VM', required=True, default=None, metavar='\b')
-    parser.add_argument('-iso', '--iso', type=str, help='ISO path to installed in VM', required=True, default=None, metavar='\b')
+    parser.add_argument('-i', '--image',
+                        required=False,
+                        type=str,
+                        default='vm',
+                        help='Vitual Machine image type, e.g. vm, vagrant',
+                        metavar='\b')
+    parser.add_argument('-hv','--hypervisor',
+                        required=False,
+                        type=str,
+                        default='virtualbox',
+                        help='Hypervisor, e.g. vmware, virtualbox, hyperv',
+                        metavar='\b')
+    parser.add_argument('-u', '--user',
+                        required=False,
+                        type=str,
+                        default='vmuser',
+                        help='User of VM',
+                        metavar='\b')
+    parser.add_argument('-p', '--pass',
+                        required=False,
+                        type=str,
+                        default='vmpass',
+                        help='Password for VM',
+                        metavar='\b')
+    parser.add_argument('-o', '--os',
+                        required=True,
+                        type=str,
+                        default=None,
+                        help='OS of VM, e.g. windows, linux',
+                        metavar='\b')
+    parser.add_argument('-a', '--arch',
+                        required=True,
+                        type=str,
+                        default=None,
+                        help='Architecture of VM, e.g. 32, 64',
+                        metavar='\b')
+    parser.add_argument('-iso', '--iso',
+                        required=True,
+                        type=str,
+                        default=None,
+                        help='ISO path to installed in VM',
+                        metavar='\b')
     #parser.add_argument('-h', '--help', action='help', help='Show this help message and exit.')
     # Array for all arguments passed to script
     args = parser.parse_args()
