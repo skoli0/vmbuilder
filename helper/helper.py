@@ -129,7 +129,7 @@ class helper(object):
             '''
             p = subprocess.Popen(cmd.split(' '), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=1)
             for line in iter(p.stdout.readline, b''):
-                print(line.rstrip().decode('utf-8')),
+                print(line.decode('utf-8')),
             p.stdout.close()
             p.wait()
             #print(cmd)
