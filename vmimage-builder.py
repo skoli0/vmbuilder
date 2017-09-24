@@ -1,6 +1,6 @@
 import argparse
 import logging
-
+import os
 __author__ = 'Sandeep Koli'
 
 def get_args():
@@ -53,7 +53,6 @@ def get_args():
                         default=None,
                         help='ISO path to installed in VM',
                         metavar='\b')
-    #parser.add_argument('-h', '--help', action='help', help='Show this help message and exit.')
     # Array for all arguments passed to script
     args = parser.parse_args()
     # Assign args to variables
@@ -88,12 +87,13 @@ def main():
     print("VM ISO: %s" % vmiso)
     '''
     logging.info("Image type: %s" % image)
-    logging.info("Provider: %s" % hypervisor)
+    logging.info("Hypervisor: %s" % hypervisor)
     logging.info("VM user: %s" % vmuser)
     logging.info("VM password: %s" % vmpass)
     logging.info("VM OS: %s" % vmos)
     logging.info("VM Architecture: %s" % vmarch)
     logging.info("VM ISO: %s" % vmiso)
 
+    #print(executable_in_path('packer'))
 if __name__ == '__main__':
     main()
