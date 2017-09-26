@@ -75,7 +75,7 @@
       "type": "shell",
       "execute_command": "echo '{{user `image_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "scripts": [
-        "config-scripts/linux/cleanup.sh"
+        "scripts/linux/cleanup.sh"
       ]
     }
   ],

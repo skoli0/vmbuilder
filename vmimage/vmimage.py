@@ -25,9 +25,9 @@ class VMImage(object):
                                         for sn in self.displayname.split(' ')]).
                                         lower().replace('-',''))
         self.vm_dir = self.displayname.replace(' ', '_')
-        self.input_dir = os.path.join(INPUT_ARTIFACTS_DIR, self.hypervisor, self.vm_dir)
-        print(self.input_dir)
-        self.output_dir = os.path.join(OUTPUT_ARTIFACTS_DIR, self.hypervisor, self.vm_dir)
+        self.indir = os.path.join(INPUT_ARTIFACTS_DIR, self.hypervisor, self.vm_dir)
+        print(self.indir)
+        self.outdir = os.path.join(OUTPUT_ARTIFACTS_DIR, self.hypervisor, self.vm_dir)
 
         print(self.short_name)
         self.steps = ['answerfile',
@@ -49,7 +49,7 @@ class VMImage(object):
         print("preprocess")
 
     def validate(self):
-        self.packer = Packer(self.vm_packerfile, only=[self.hypervisor])
+        self.packer = Packer(self.vm_packerfile, only=[self.hypervisor + '-iso'])
         self.packer.validate(syntax_only=False)
 
     def build(self):
