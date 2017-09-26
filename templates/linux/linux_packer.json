@@ -90,7 +90,6 @@
     "ramsize": "ram_size_goes_here",
     "answerfile": "linux_kickstart_config_file_goes_here",
     "in_dir": "input_directory_goes_here",
-    "out_dir": "output_directory_goes_here",
-    "image_alias": "image_alias_goes_here"
+    "out_dir": "output_directory_goes_here"
   }
 }
