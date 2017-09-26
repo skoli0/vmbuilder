@@ -1,4 +1,10 @@
-#from vmimage import *
+import os
+import shutil
+from packer.packer import *
+
+PACKERFILE_TEMPLATES_DIR = "templates"
+INPUT_ARTIFACTS_DIR = "input-artifacts"
+OUTPUT_ARTIFACTS_DIR = "output-artifacts"
 
 class VMImage(object):
     def __init__(self, vm):
@@ -8,6 +14,9 @@ class VMImage(object):
         self.os = vm['os']
         self.arch = vm['arch']
         self.iso = vm['iso']
+        self.hypervisor = vm['hypervisor']
+        self.ram = vm['ram']
+        self.disk = int(vm['disk']) * 1024
         self.language = vm['language']
         self.displayname = "{0} {1}-bit {2}".format(self.os, self.arch,
                                                     self.language).title()
@@ -15,6 +24,11 @@ class VMImage(object):
         self.short_name = "{0}".format('_'.join([sn[:3]
                                         for sn in self.displayname.split(' ')]).
                                         lower().replace('-',''))
+        self.vm_dir = self.displayname.replace(' ', '_')
+        self.input_dir = os.path.join(INPUT_ARTIFACTS_DIR, self.hypervisor, self.vm_dir)
+        print(self.input_dir)
+        self.output_dir = os.path.join(OUTPUT_ARTIFACTS_DIR, self.hypervisor, self.vm_dir)
+
         print(self.short_name)
         self.steps = ['answerfile',
                       'packerfile',
@@ -35,10 +49,12 @@ class VMImage(object):
         print("preprocess")
 
     def validate(self):
-        print("validate")
+        self.packer = Packer(self.vm_packerfile, only=[self.hypervisor])
+        self.packer.validate(syntax_only=False)
 
     def build(self):
         print("build")
+        self.packer.build(force=True)
 
     def cleanup(self):
         print("cleanup")
