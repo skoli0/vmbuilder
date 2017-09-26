@@ -40,30 +40,3 @@ class VMLinux(VMImage):
     def __init__(self, vm):
         super().__init__(vm)
         print("build linux " + vm['image'])
-
-class VMWindows(VMImage):
-    def __init__(self, vm):
-        super().__init__(vm)
-        print("build windows " + vm['image'])
-
-class BuildVM(object):
-    def __init__(self, vm_dict):
-        self.image = vm_dict['image']
-        self.vmuser = vm_dict['user']
-        self.vmos = vm_dict['os']
-        self.vmarch = vm_dict['arch']
-        self.vmiso = vm_dict['iso']
-        self.vm_dict = vm_dict
-
-    def Build(self):
-        #print(self.vmuser)
-        if (self.vmos.lower() == 'linux'):
-            self.vm_dict.pop('os', None)
-            VMLinux(self.vm_dict)
-        elif (self.vmos.lower() == 'windows'):
-            self.vm_dict.pop('os', None)
-            VMWindows(self.vm_dict)
-        else:
-            print("not a valid os type")
-
-        print(self.vm_dict)
