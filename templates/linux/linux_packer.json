@@ -68,7 +68,7 @@
       "type": "shell",
       "execute_command": "echo '{{user `image_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "scripts": [
-        "config-scripts/linux/configure-image.sh"
+        "scripts/linux/configure.sh"
       ]
     },
     {
