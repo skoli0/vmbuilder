@@ -1,7 +1,8 @@
 import argparse
 import logging
 import os
-from vmimage.vmimage import *
+#from vmimage.vmimage import *
+from vmimage import buildvm
 __author__ = 'Sandeep Koli'
 
 def get_args():
@@ -80,7 +81,7 @@ def main():
     logging.info("VM ISO: %s" % vmiso)
     '''
 
-    vm = BuildVM(arg_dict)
+    vm = buildvm.BuildVM(arg_dict)
     vm.Build()
 
     #print(executable_in_path('packer'))
