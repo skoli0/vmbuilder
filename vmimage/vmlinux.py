@@ -4,7 +4,6 @@ import json
 class VMLinux(VMImage):
     def __init__(self, vm):
         super().__init__(vm)
-        #self.vm = vm
 
     def answerfile(self):
         _input_template_file_deb = os.path.join(PACKERFILE_TEMPLATES_DIR, 'linux',
@@ -18,17 +17,7 @@ class VMLinux(VMImage):
         shutil.copyfile(_input_template_file_deb, self.answerfile)
         helper.SearchReplaceInFile(self.answerfile, '%Var.UserName%', self.user)
         helper.SearchReplaceInFile(self.answerfile, '%Var.Password%', self.password)
-        '''
-        _input_template_file_rpm = os.path.join(PACKERFILE_TEMPLATES_DIR, 'linux',
-                        'rhel_based.cfg')
-        _output_answerfile_rpm = os.path.join(INPUT_ARTIFACTS_DIR, 'linux',
-                        self.vm_dir, 'ks.cfg')
 
-        shutil.copyfile(_input_template_file_rpm, _output_answerfile_rpm)
-
-        helper.SearchReplaceInFile(_output_answerfile_rpm, '%Var.UserName%', self.user)
-        helper.SearchReplaceInFile(_output_answerfile_rpm, '%Var.Password%', self.password)
-        '''
     def packerfile(self):
         _input_packerfile = os.path.join(PACKERFILE_TEMPLATES_DIR, 'linux',
                         'linux_packer.json')
@@ -37,8 +26,6 @@ class VMLinux(VMImage):
 
         if not os.path.exists(os.path.dirname(self.vm_packerfile)):
             os.makedirs(os.path.dirname(self.vm_packerfile))
-
-        #shutil.copyfile(_input_packerfile, self.vm_packerfile)
 
         try:
             with open(_input_packerfile) as data_file:
@@ -56,8 +43,8 @@ class VMLinux(VMImage):
         data['variables']['displayname'] = self.displayname
         data['variables']['iso_path'] = self.iso.replace("\\", "/")
         data['variables']['answerfile'] = self.answerfile.replace("\\", "/")
-        data['variables']['in_dir'] = self.indir.replace('\\', '/')
-        data['variables']['out_dir'] = self.outdir.replace('\\', '/')
+        data['variables']['indir'] = self.indir.replace('\\', '/')
+        data['variables']['outdir'] = self.outdir.replace('\\', '/')
         with open(self.vm_packerfile, 'w') as outfile:
             json.dump(data, outfile, sort_keys=True, indent=4, ensure_ascii=False)
 
