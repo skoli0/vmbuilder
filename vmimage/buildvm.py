@@ -1,8 +1,12 @@
 from vmimage import vmwindows as vmw
 from vmimage import vmlinux as vml
-#from vmwindows import vmwindows as VW
 
 class BuildVM(object):
+    """
+    # Wrapper class around actual OS specific classes
+    # All the argument validation will be done here to reduce overhead on
+    # actual image classes
+    """
     def __init__(self, vm_dict):
         self.image = vm_dict['image']
         self.vmuser = vm_dict['user']
@@ -13,12 +17,14 @@ class BuildVM(object):
 
     def Build(self):
         #print(self.vmuser)
-        if (self.vmos.lower() == 'linux'):
-            self.vm_dict.pop('os', None)
-            vml.VMLinux(self.vm_dict)
-        elif (self.vmos.lower() == 'windows'):
-            self.vm_dict.pop('os', None)
+        if ('linux' in self.vmos.lower()):
+            #self.vm_dict.pop('os', None)
+            vm = vml.VMLinux(self.vm_dict)
+            vm.Build()
+        elif ('windows' in self.vmos.lower()):
+            #self.vm_dict.pop('os', None)
             vmw.VMWindows(self.vm_dict)
+            vmw.Build()
         else:
             print("not a valid os type")
 

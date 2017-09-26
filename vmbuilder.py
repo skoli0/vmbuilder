@@ -54,6 +54,24 @@ def get_args():
                         default=None,
                         help='ISO path to installed in VM',
                         metavar='\b')
+    parser.add_argument('-r', '--ram',
+                        required=False,
+                        type=int,
+                        default=1024,
+                        help='RAM size of VM',
+                        metavar='\b')
+    parser.add_argument('-d', '--disk',
+                        required=False,
+                        type=int,
+                        default=20,
+                        help='Hard disk size of VM',
+                        metavar='\b')
+    parser.add_argument('-l', '--language',
+                        required=False,
+                        type=str,
+                        default='english',
+                        help='Language of OS in VM',
+                        metavar='\b')
     # Array for all arguments passed to script
     args = vars(parser.parse_args())
 

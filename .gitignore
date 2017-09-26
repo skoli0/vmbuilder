@@ -1,0 +1,10 @@
+.DS_Store
+.pyc
+.Python
+include/
+lib/
+*/__pycache__
+*/output-*
+*/.DS_Store
+*/*.pyc
+bin/
