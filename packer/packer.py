@@ -20,7 +20,7 @@ class Packer(object):
         """
         exec_path = helper.executable_in_path('packer')
         if exec_path == None:
-            raise OSError('packer binary not found in this system. please donwload and install it.')
+            raise OSError('packer binary not found in this system. please donwnload and install it.')
 
         self.packer_cmd = ""
 

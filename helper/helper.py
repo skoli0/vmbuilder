@@ -2,6 +2,7 @@ import re
 import os, sys
 import json
 import csv
+import shutil
 import ctypes
 import logging
 import datetime
@@ -43,14 +44,18 @@ class helper(object):
     def executable_in_path(executable):
         '''Returns the full path to an executable according to PATH,
         otherwise None.'''
-        path = os.environ.get('PATH')
-        if not path:
-            print >> sys.stderr, "Warning: No PATH could be searched"
-        paths = path.split(':')
-        for path in paths:
-            fullpath = os.path.join(path, executable)
-            if os.path.isfile(fullpath) and os.access(fullpath, os.X_OK):
-                return fullpath
+        if os.name == 'nt':
+            return shutil.which('packer')
+        else:
+            path = os.environ.get('PATH')
+            if not path:
+                print >> sys.stderr, "Warning: No PATH could be searched"
+            paths = path.split(':')
+            for path in paths:
+                fullpath = os.path.join(path, executable)
+                if os.path.isfile(fullpath) and os.access(fullpath, os.X_OK):
+                    return fullpath
+                
         return None
 
     @staticmethod
@@ -67,12 +72,12 @@ class helper(object):
         return arg
 
     @staticmethod
-    def get_guestos(os_string, os_arch, image_provider):
+    def get_guestos(os_string, os_arch, vm_provider):
         """Returns guest os type for a specific provider
 
         :param os_string:
         :param os_arch:
-        :param image_provider:
+        :param vm_provider:
         :return:
         """
 
@@ -89,7 +94,7 @@ class helper(object):
 
         data = ""
         try:
-            guest_os_file = os.path.join(DEFAULT_HELPER_PATH, (image_provider.lower() + '-guestos.json'))
+            guest_os_file = os.path.join(DEFAULT_HELPER_PATH, (vm_provider.lower() + '-guestos.json'))
             with open(guest_os_file) as data_file:
                 data = json.load(data_file)
         except (OSError, IOError) as ex:

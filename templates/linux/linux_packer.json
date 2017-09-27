@@ -6,20 +6,20 @@
       "boot_command": "{{user `boot_cmd`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "guest_os_type": "{{user `guestos`}}",
-      "output_directory": "{{user `out_dir`}}/{{user `image_alias`}}",
-      "vm_name": "{{user `image_alias`}}",
-      "vmdk_name": "{{user `image_alias`}}",
+      "output_directory": "{{user `outdir`}}/{{user `vm_name`}}",
+      "vm_name": "{{user `vm_name`}}",
+      "vmdk_name": "{{user `vm_name`}}",
       "disk_size": "{{user `disksize`}}",
       "iso_url": "{{user `iso_path`}}",
-      "ssh_username": "{{user `image_username`}}",
-      "ssh_password": "{{user `image_password`}}",
-      "http_directory": "{{user `in_dir`}}",
+      "ssh_username": "{{user `vm_username`}}",
+      "ssh_password": "{{user `vm_password`}}",
+      "http_directory": "{{user `indir`}}",
       "disk_type_id": 0,
       "tools_upload_flavor": "linux",
       "tools_upload_path": "/tmp/vmware_tools_{{.Flavor}}.iso",
       "skip_compaction": true,
       "ssh_wait_timeout": "1h",
-      "shutdown_command": "echo '{{user `image_password`}}' | sudo -S /sbin/halt -h -p",
+      "shutdown_command": "echo '{{user `vm_password`}}' | sudo -S /sbin/halt -h -p",
       "boot_wait": "5s",
       "vmx_data": {
         "RemoteDisplay.vnc.enabled": "false",
@@ -46,15 +46,15 @@
       "headless": false,
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "guest_os_type": "{{user `guestos`}}",
-      "output_directory": "{{user `out_dir`}}/{{user `image_alias`}}",
-      "vm_name": "{{user `image_alias`}}",
+      "output_directory": "{{user `outdir`}}/{{user `vm_name`}}",
+      "vm_name": "{{user `vm_name`}}",
       "disk_size": "{{user `disksize`}}",
       "iso_url": "{{user `iso_path`}}",
-      "ssh_username": "{{user `image_username`}}",
-      "ssh_password": "{{user `image_password`}}",
-      "http_directory": "{{user `in_dir`}}",
+      "ssh_username": "{{user `vm_username`}}",
+      "ssh_password": "{{user `vm_password`}}",
+      "http_directory": "{{user `indir`}}",
       "ssh_wait_timeout": "1h",
-      "shutdown_command": "echo '{{user `image_password`}}' | sudo -S /sbin/halt -h -p",
+      "shutdown_command": "echo '{{user `vm_password`}}' | sudo -S /sbin/halt -h -p",
       "boot_wait": "5s",
       "vboxmanage": [
       ["modifyvm", "{{.Name}}", "--nic1", "nat"],
@@ -66,26 +66,27 @@
   "provisioners": [
     {
       "type": "shell",
-      "execute_command": "echo '{{user `image_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "execute_command": "echo '{{user `vm_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "scripts": [
         "scripts/linux/configure.sh"
       ]
     },
     {
       "type": "shell",
-      "execute_command": "echo '{{user `image_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "execute_command": "echo '{{user `vm_password`}}' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
       "scripts": [
         "scripts/linux/cleanup.sh"
       ]
     }
   ],
   "variables": {
-    "image_username": "image_username",
-    "image_password": "image_password",
+    "vm_name": "vm_name",
+    "vm_username": "vm_username",
+    "vm_password": "vm_password",
     "guestos": "guest_os_goes_here",
     "iso_path": "iso_path_goes_here",
     "iso_checksum_type": "none",
-    "displayname": "image_displayname",
+    "displayname": "vm_displayname",
     "disksize": "disk_size_goes_here",
     "ramsize": "ram_size_goes_here",
     "answerfile": "linux_kickstart_config_file_goes_here",

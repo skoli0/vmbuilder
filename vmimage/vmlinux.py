@@ -1,6 +1,23 @@
 from .vmimage import *
 import json
 
+boot_cmd = {
+    "ubuntu": [
+        "<esc><esc><enter><wait>",
+        "/install/vmlinuz noapic ",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+        "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+        "hostname={{user `hostname`}} ",
+        "fb=false debconf/frontend=noninteractive ",
+        "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
+        "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
+        "initrd=/install/initrd.gz -- <enter><wait><enter>"
+    ],
+    "red": ["<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg hostname={{.Name}}<enter><wait>"],
+    "centos": ["<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg hostname={{.Name}}<enter><wait>"],
+    "fedora": ["<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg hostname={{.Name}}<enter><wait>"]
+}
+
 class VMLinux(VMImage):
     def __init__(self, vm):
         super().__init__(vm)
@@ -12,7 +29,7 @@ class VMLinux(VMImage):
                         self.vm_dir, 'preseed.cfg')
 
         if not os.path.exists(os.path.dirname(self.answerfile)):
-            os.makedirs(os.path.dirname(_output_answerfile))
+            os.makedirs(os.path.dirname(self.answerfile))
 
         shutil.copyfile(_input_template_file_deb, self.answerfile)
         helper.SearchReplaceInFile(self.answerfile, '%Var.UserName%', self.user)
@@ -35,16 +52,22 @@ class VMLinux(VMImage):
             logging.error(str(e.message))
 
         assert isinstance(data, object)
-        data['variables']['guestos'] = "Ubuntu" #utils.get_guestos(self.image_version, self.image_architecture, self.image_provider)
+
+        data['variables']['vm_name'] = self.short_name
+        data['variables']['guestos'] = "Ubuntu" #utils.get_guestos(self.vm_version, self.vm_architecture, self.vm_provider)
         data['variables']['ramsize'] = str(self.ram)
         data['variables']['disksize'] = str(self.disk)
-        data['variables']['image_username'] = self.user
-        data['variables']['image_password'] = self.password
+        data['variables']['vm_username'] = self.user
+        data['variables']['vm_password'] = self.password
         data['variables']['displayname'] = self.displayname
         data['variables']['iso_path'] = self.iso.replace("\\", "/")
         data['variables']['answerfile'] = self.answerfile.replace("\\", "/")
-        data['variables']['indir'] = self.indir.replace('\\', '/')
-        data['variables']['outdir'] = self.outdir.replace('\\', '/')
+        data['variables']['indir'] = os.path.abspath(self.indir).replace('\\', '/')
+        data['variables']['outdir'] = os.path.abspath(self.outdir).replace('\\', '/')
+
+        for builder in data['builders']:
+            builder['boot_command'] = boot_cmd['ubuntu']
+
         with open(self.vm_packerfile, 'w') as outfile:
             json.dump(data, outfile, sort_keys=True, indent=4, ensure_ascii=False)
 

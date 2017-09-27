@@ -18,12 +18,11 @@ class VMImage(object):
         self.ram = vm['ram']
         self.disk = int(vm['disk']) * 1024
         self.language = vm['language']
-        self.displayname = "{0} {1}-bit {2}".format(self.os, self.arch,
+        self.displayname = "{0} {1}bit {2}".format(self.os, self.arch,
                                                     self.language).title()
         print(self.displayname)
         self.short_name = "{0}".format('_'.join([sn[:3]
-                                        for sn in self.displayname.split(' ')]).
-                                        lower().replace('-',''))
+                                        for sn in self.displayname.split(' ')]).lower())
         self.vm_dir = self.displayname.replace(' ', '_')
         self.indir = os.path.join(INPUT_ARTIFACTS_DIR, self.hypervisor, self.vm_dir)
         print(self.indir)
@@ -65,4 +64,4 @@ class VMImage(object):
         self.preprocess()
         self.validate()
         self.build()
-        self.cleanup()
+        #self.cleanup()
