@@ -3,15 +3,18 @@ import json
 
 boot_cmd = {
     "ubuntu": [
-        "<esc><esc><enter><wait>",
-        "/install/vmlinuz noapic ",
-        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+        "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs>",
+        "/install/vmlinuz ",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<wait> ",
         "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
-        "hostname={{user `hostname`}} ",
+        "hostname={{.Name}} ",
         "fb=false debconf/frontend=noninteractive ",
         "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
         "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
-        "initrd=/install/initrd.gz -- <enter><wait><enter>"
+        "initrd=/install/initrd.gz -- <enter>"
     ],
     "red": ["<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg hostname={{.Name}}<enter><wait>"],
     "centos": ["<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg hostname={{.Name}}<enter><wait>"],
@@ -20,13 +23,12 @@ boot_cmd = {
 
 class VMLinux(VMImage):
     def __init__(self, vm):
-        super().__init__(vm)
+        super().__init__(vm, "linux")
 
     def answerfile(self):
         _input_template_file_deb = os.path.join(PACKERFILE_TEMPLATES_DIR, 'linux',
                         'debian_based.cfg')
-        self.answerfile = os.path.join(INPUT_ARTIFACTS_DIR, 'linux',
-                        self.vm_dir, 'preseed.cfg')
+        self.answerfile = os.path.join(self.vmindir, 'preseed.cfg')
 
         if not os.path.exists(os.path.dirname(self.answerfile)):
             os.makedirs(os.path.dirname(self.answerfile))
@@ -38,8 +40,7 @@ class VMLinux(VMImage):
     def packerfile(self):
         _input_packerfile = os.path.join(PACKERFILE_TEMPLATES_DIR, 'linux',
                         'linux_packer.json')
-        self.vm_packerfile = os.path.join(INPUT_ARTIFACTS_DIR, 'linux',
-                        self.vm_dir, "packerfile.json")
+        self.vm_packerfile = os.path.join(self.vmindir, "packerfile.json")
 
         if not os.path.exists(os.path.dirname(self.vm_packerfile)):
             os.makedirs(os.path.dirname(self.vm_packerfile))
@@ -53,7 +54,7 @@ class VMLinux(VMImage):
 
         assert isinstance(data, object)
 
-        data['variables']['vm_name'] = self.short_name
+        data['variables']['vm_name'] = self.vm_dir
         data['variables']['guestos'] = "Ubuntu" #utils.get_guestos(self.vm_version, self.vm_architecture, self.vm_provider)
         data['variables']['ramsize'] = str(self.ram)
         data['variables']['disksize'] = str(self.disk)
@@ -61,9 +62,9 @@ class VMLinux(VMImage):
         data['variables']['vm_password'] = self.password
         data['variables']['displayname'] = self.displayname
         data['variables']['iso_path'] = self.iso.replace("\\", "/")
-        data['variables']['answerfile'] = self.answerfile.replace("\\", "/")
-        data['variables']['indir'] = os.path.abspath(self.indir).replace('\\', '/')
-        data['variables']['outdir'] = os.path.abspath(self.outdir).replace('\\', '/')
+        data['variables']['answerfile'] = os.path.basename(self.answerfile)
+        data['variables']['indir'] = self.vmindir.replace('\\', '/')
+        data['variables']['outdir'] = self.vmoutdir.replace('\\', '/')
 
         for builder in data['builders']:
             builder['boot_command'] = boot_cmd['ubuntu']

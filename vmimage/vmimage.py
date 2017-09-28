@@ -7,28 +7,27 @@ INPUT_ARTIFACTS_DIR = "input-artifacts"
 OUTPUT_ARTIFACTS_DIR = "output-artifacts"
 
 class VMImage(object):
-    def __init__(self, vm):
+    def __init__(self, vm, osfamily):
         #print('VMImage class is defined')
         self.user = vm['user']
         self.password = vm['pass']
-        self.os = vm['os']
+        self.osname = vm['os']
+        self.osfamily = osfamily
         self.arch = vm['arch']
         self.iso = vm['iso']
         self.hypervisor = vm['hypervisor']
         self.ram = vm['ram']
         self.disk = int(vm['disk']) * 1024
         self.language = vm['language']
-        self.displayname = "{0} {1}bit {2}".format(self.os, self.arch,
-                                                    self.language).title()
+        self.displayname = "{0} {1}bit {2}".format(self.osname, self.arch, self.language).title()
         print(self.displayname)
-        self.short_name = "{0}".format('_'.join([sn[:3]
-                                        for sn in self.displayname.split(' ')]).lower())
-        self.vm_dir = self.displayname.replace(' ', '_')
-        self.indir = os.path.join(INPUT_ARTIFACTS_DIR, self.hypervisor, self.vm_dir)
-        print(self.indir)
-        self.outdir = os.path.join(OUTPUT_ARTIFACTS_DIR, self.hypervisor, self.vm_dir)
+        self.vm_dir = self.displayname.lower().replace(' ', '_')
+        print(self.osname, self.osfamily)
+        self.vmindir = os.path.abspath(os.path.join(INPUT_ARTIFACTS_DIR, self.hypervisor, self.osfamily, self.vm_dir).lower())
+        print(self.vmindir)
+        self.vmoutdir = os.path.abspath(os.path.join(OUTPUT_ARTIFACTS_DIR, self.hypervisor, self.osfamily, self.vm_dir).lower())
+        print(self.vmoutdir)
 
-        print(self.short_name)
         self.steps = ['answerfile',
                       'packerfile',
                       'preprocess',

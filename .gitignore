@@ -9,3 +9,6 @@ lib/
 */*.pyc
 bin/
 input-artifacts/
+output-artifacts/
+.vscode
+packer_cache/
