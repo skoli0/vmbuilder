@@ -1,0 +1,61 @@
+[Data]
+AutoPartition=1
+MsDosInitiated="0"
+UnattendedInstall="Yes"
+
+[Unattended]
+UnattendMode=FullUnattended
+OemSkipEula=Yes
+OemPreinstall=No
+TargetPath=\WINDOWS
+Repartition=Yes
+UnattendSwitch=Yes
+DriverSigningPolicy=Ignore
+
+[GuiUnattended]
+AdminPassword="symantec"
+EncryptedAdminPassword=No
+OEMSkipRegional=1
+TimeZone=4
+OemSkipWelcome=1
+ServerWelcome=No
+EMSSkipUnattendProcessing=0
+EMSBlankPassword=Yes 
+
+AutoLogon=Yes
+AutoLogonCount=1
+[UserData]
+ProductKey=""
+FullName="automation"
+OrgName=""
+ComputerName=*
+
+[LicenseFilePrintData]
+AutoMode=PerServer
+AutoUsers=5
+
+[Identification]
+JoinWorkgroup=WORKGROUP
+
+[Networking]
+InstallDefaultComponents=Yes
+
+[Branding]
+BrandIEUsingUnattended=Yes
+
+[Display]
+BitsPerPel=32
+XResolution=800
+YResolution=600
+
+[GuiRunOnce]
+Command0="cmd /c copy a:\upgrader.exe %TEMP%\upgrader.exe"
+Command1="cmd /c copy a:\unattend.cmd %TEMP%\unattend.cmd"
+Command2="cmd /c copy a:\storePwd.exe %TEMP%\storePwd.exe"
+Command3="cmd /c copy a:\storePwd.ini %TEMP%\storePwd.ini"
+Command4="%TEMP%\unattend.cmd"
+
+[VMwareData]
+RunCmdKey=Command4
+RunCmdNoReboot="%TEMP%\unattend.cmd noautoreboot"
+

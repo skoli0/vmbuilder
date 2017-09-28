@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+
+  <settings pass="windowsPE">
+
+   <component name="Microsoft-Windows-Setup" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="x86">
+    <UserData>
+     <AcceptEula>true</AcceptEula>
+     <!-- The following section only needed for Vista installs -->
+     <ProductKey>
+       <WillShowUI>Never</WillShowUI>
+       <!-- Vista's 'default' product key. Gets overriden using slmgr.vbs. -->
+       <Key> </Key>
+     </ProductKey>
+    </UserData>
+
+    <DiskConfiguration>
+     <WillShowUI>OnError</WillShowUI>
+     <Disk>
+      <DiskID>0</DiskID>
+      <WillWipeDisk>true</WillWipeDisk>
+      <CreatePartitions>
+       
+       
+       <CreatePartition>
+        <Order>1</Order>
+        <Type>Primary</Type>
+        <Extend>true</Extend>
+       </CreatePartition>
+      </CreatePartitions>
+     </Disk>
+    </DiskConfiguration>
+
+    <ComplianceCheck>
+     <DisplayReport>OnError</DisplayReport>
+    </ComplianceCheck>
+
+    <ImageInstall>
+     <OSImage>
+      <InstallFrom>
+       <MetaData wcm:action="add">
+        <Key>/IMAGE/NAME</Key>
+        <Value>Windows Vista BUSINESS</Value>
+       </MetaData>
+      </InstallFrom>
+      <InstallTo>
+       <DiskID>0</DiskID>
+       <PartitionID>1</PartitionID>
+      </InstallTo>
+      <WillShowUI>OnError</WillShowUI>
+      <InstallToAvailablePartition>false</InstallToAvailablePartition>
+     </OSImage>
+    </ImageInstall>
+   </component>
+
+   <component name="Microsoft-Windows-International-Core-WinPE" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="x86">
+    <InputLocale>pl-PL</InputLocale>
+    <SystemLocale>pl-PL</SystemLocale>
+    <UILanguage>pl-PL</UILanguage>
+    <UserLocale>pl-PL</UserLocale>
+   </component>
+
+  </settings>
+
+  <settings pass="oobeSystem">
+
+   <component name="Microsoft-Windows-Shell-Setup" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="x86">
+    <AutoLogon>
+     <Password>
+      <Value>symantec</Value> 
+      <PlainText>true</PlainText>
+     </Password>
+     <Enabled>true</Enabled> 
+     <Username>automation</Username> 
+    </AutoLogon>
+
+    <UserAccounts>
+     <LocalAccounts>
+      <LocalAccount wcm:action="add">
+       <Password>
+        <Value>symantec</Value>
+        <PlainText>true</PlainText>
+       </Password>
+       <Group>administrators;users</Group>
+       <Name>automation</Name>
+      </LocalAccount>
+     </LocalAccounts>
+    </UserAccounts>
+
+    <OOBE>
+     <HideEULAPage>true</HideEULAPage>
+     <ProtectYourPC>3</ProtectYourPC>
+     <SkipMachineOOBE>true</SkipMachineOOBE>
+     <SkipUserOOBE>true</SkipUserOOBE>
+     <NetworkLocation>Other</NetworkLocation>
+    </OOBE>
+
+    <FirstLogonCommands>
+     <SynchronousCommand wcm:action="add">
+      <CommandLine>cmd /c copy a:\upgrader.exe %TEMP%\upgrader.exe</CommandLine>
+      <Order>1</Order>
+     </SynchronousCommand>
+     <SynchronousCommand wcm:action="add">
+      <CommandLine>cmd /c copy a:\unattend.cmd %TEMP%\unattend.cmd</CommandLine>
+      <Order>2</Order>
+     </SynchronousCommand>
+     <SynchronousCommand wcm:action="add">
+      <CommandLine>cmd /c copy a:\storePwd.exe %TEMP%\storePwd.exe</CommandLine>
+      <Order>3</Order>
+     </SynchronousCommand>
+     <SynchronousCommand wcm:action="add">
+      <CommandLine>cmd /c copy a:\storePwd.ini %TEMP%\storePwd.ini</CommandLine>
+      <Order>4</Order>
+     </SynchronousCommand>
+     <SynchronousCommand wcm:action="add">
+      <CommandLine>%TEMP%\unattend.cmd</CommandLine>
+      <Order>5</Order>
+     </SynchronousCommand>
+     <SynchronousCommand wcm:action="add">
+      <CommandLine>powercfg -setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c</CommandLine>
+      <Order>6</Order>
+     </SynchronousCommand>
+     <SynchronousCommand wcm:action="add">
+      <CommandLine>net accounts /MAXPWAGE:UNLIMITED</CommandLine>
+      <Order>7</Order>
+     </SynchronousCommand>
+    <SynchronousCommand wcm:action="add"><CommandLine>reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /t REG_SZ /d 0 /f</CommandLine><Order>8</Order></SynchronousCommand><SynchronousCommand wcm:action="add"><CommandLine>cscript.exe \windows\system32\slmgr.vbs /ipk THKPP-FD8RX-GF6XT-7G8PB-PRV2F</CommandLine><Order>9</Order></SynchronousCommand><SynchronousCommand wcm:action="add"><CommandLine>cscript.exe \windows\system32\slmgr.vbs /ato</CommandLine><Order>10</Order></SynchronousCommand></FirstLogonCommands>
+
+    <TimeZone>Pacific Standard Time</TimeZone>
+   </component>
+
+  </settings>
+
+  <settings pass="specialize">
+   <component name="Microsoft-Windows-Security-Licensing-SLC-UX" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="x86">
+    <SkipAutoActivation>true</SkipAutoActivation>
+   </component>
+   <component name="Microsoft-Windows-Deployment" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="x86">
+    <RunSynchronous>
+     <RunSynchronousCommand wcm:action="add">
+      <Order>1</Order>
+      <Path>reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\FirstNetwork" /v Category /t REG_DWORD /d 00000000 /f</Path>
+     </RunSynchronousCommand>
+    </RunSynchronous>
+   </component>
+  </settings>
+
+</unattend>
