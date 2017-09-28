@@ -23,8 +23,8 @@ class BuildVM(object):
             vm.Build()
         elif ('windows' in self.vmos.lower()):
             #self.vm_dict.pop('os', None)
-            vmw.VMWindows(self.vm_dict)
-            vmw.Build()
+            vm = vmw.VMWindows(self.vm_dict)
+            vm.Build()
         else:
             print("not a valid os type")
 

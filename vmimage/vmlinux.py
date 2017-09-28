@@ -38,8 +38,8 @@ class VMLinux(VMImage):
         helper.SearchReplaceInFile(self.answerfile, '%Var.Password%', self.password)
 
     def packerfile(self):
-        _input_packerfile = os.path.join(PACKERFILE_TEMPLATES_DIR, 'linux',
-                        'linux_packer.json')
+        _input_packerfile = self.get_packerfile()
+        
         self.vm_packerfile = os.path.join(self.vmindir, "packerfile.json")
 
         if not os.path.exists(os.path.dirname(self.vm_packerfile)):

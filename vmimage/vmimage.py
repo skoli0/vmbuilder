@@ -2,7 +2,7 @@ import os
 import shutil
 from packer.packer import *
 
-PACKERFILE_TEMPLATES_DIR = "templates"
+PACKER_TEMPLATES_DIR = "templates"
 INPUT_ARTIFACTS_DIR = "input-artifacts"
 OUTPUT_ARTIFACTS_DIR = "output-artifacts"
 
@@ -62,5 +62,37 @@ class VMImage(object):
         self.packerfile()
         self.preprocess()
         self.validate()
-        self.build()
+        #self.build()
         #self.cleanup()
+
+    def get_packerfile(self):
+        """Returns the os-specific packer json template file
+        
+        :param os_type: target image os
+        :return: os specific packer json template
+        """
+        packerfile = os.path.join(PACKER_TEMPLATES_DIR, self.osfamily, self.osfamily + "_packerfile.json")
+
+        if not os.path.isfile(packerfile):
+            raise OSError('packerfile not found at path: {0}'.format(packerfile))
+
+        return packerfile.replace('\\', '/')
+
+    def get_answerfile(self, os_type):
+        """Returns the os-specific packer answer template file
+        
+        :param os_type: target image os
+        :return: os specific packer json template
+        """
+        sif_answerfile = os.path.abspath(os.path.join(PACKER_TEMPLATES_DIR, self.osfamily, "winnt.sif"))
+        xml_answerfile = os.path.abspath(os.path.join(PACKER_TEMPLATES_DIR, self.osfamily, "autounattend.xml"))
+        print(sif_answerfile, xml_answerfile)
+
+        try:
+            answerfiles = [sif_answerfile, xml_answerfile];
+            if all([os.path.isfile(f) for f in answerfiles]):  
+                return answerfiles
+        except (OSError, IOError, TypeError) as e:
+            logging.error('packer config file does not exist')
+
+        return None

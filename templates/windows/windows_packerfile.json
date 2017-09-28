@@ -1,0 +1,113 @@
+{
+    "builders": [
+    {
+      "type": "vmware-iso",
+      "iso_url": "{{user `iso_path`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "headless": false,
+      "boot_wait": "2m",
+      "communicator": "winrm",
+      "winrm_username": "{{user `image_username`}}",
+      "winrm_password": "{{user `image_password`}}",
+      "winrm_timeout": "12h",
+      "disk_type_id": 0,
+      "skip_compaction": true,
+      "output_directory": "{{user `out_dir`}}",
+      "vm_name": "{{user `image_alias`}}",
+      "vmdk_name": "{{user `image_alias`}}",
+      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "guest_os_type": "{{user `guestos`}}",
+      "disk_size": "{{user `disksize`}}",
+      "vnc_port_min": 5900,
+      "vnc_port_max": 5980,
+      "floppy_files": [
+        "{{user `xml_answerfile`}}",
+        "{{user `sif_answerfile`}}",
+        "scripts/windows/batch/configure.bat"
+      ],
+      "vmx_data": {
+          "{{user `disk_type`}}0.virtualdev" : "{{user `controller`}}",
+          "tools.upgrade.policy": "manual",
+          "RemoteDisplay.vnc.enabled": "false",
+          "RemoteDisplay.vnc.port": "5985",
+          "memsize": "{{user `ramsize`}}",
+          "numvcpus": "1",
+          "displayname": "{{user `displayname`}}",
+          "ethernet0.present": "TRUE",
+          "ethernet0.connectionType": "nat"
+      }
+    },
+    {
+      "type": "virtualbox-iso",
+      "vm_name": "{{user `image_alias`}}",
+      "iso_url": "{{user `iso_path`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "headless": false,
+      "boot_wait": "2m",
+      "communicator": "winrm",
+      "winrm_username": "{{user `image_username`}}",
+      "winrm_password": "{{user `image_password`}}",
+      "winrm_timeout": "12h",
+      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "shutdown_timeout": "60m",
+      "post_shutdown_delay": "1m",
+      "guest_os_type": "{{user `guestos`}}",
+      "disk_size": 40960,
+      "output_directory": "{{user `out_dir`}}",
+      "guest_additions_mode": "attach",
+      "floppy_files": [
+        "{{user `xml_answerfile`}}",
+        "{{user `sif_answerfile`}}",
+        "scripts/windows/batch/configure.bat"
+      ],
+      "vboxmanage": [
+        ["modifyvm", "{{.Name}}", "--nic1", "nat"],
+        ["modifyvm", "{{.Name}}", "--memory", "{{user `ramsize`}}"],
+        ["modifyvm", "{{.Name}}", "--cpus", "1"]
+      ]
+    },
+    {
+      "type": "hyperv-iso",
+      "guest_additions_mode": "attach",
+      "guest_additions_path": "config-files/hyperv/vmguest.iso",
+      "iso_url": "{{ user `iso_path` }}",
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "ram_size": 4096,
+      "disk_size": 40960,
+      "generation": 1,
+      "cpu": 1,
+      "vm_name": "{{user `image_alias`}}",
+      "communicator": "winrm",
+      "winrm_username": "{{user `image_username`}}",
+      "winrm_password": "{{user `image_password`}}",
+      "winrm_timeout": "12h",
+      "shutdown_command": "shutdown /s /t 2 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "shutdown_timeout": "15m",
+      "switch_name": "hyperv_switch",
+      "output_directory": "{{user `out_dir`}}/{{user `image_alias`}}",
+      "floppy_files": [
+          "{{user `xml_answerfile`}}",
+          "{{user `sif_answerfile`}}",
+          "scripts/windows/batch/configure.bat"
+      ]
+    }
+  ],
+   "variables": {
+      "image_username": "image_username",
+      "image_password": "image_password",
+      "guestos": "guest_os",
+      "iso_path": "iso_path_goes_here",
+      "iso_checksum_type": "none",
+      "displayname": "image_displayname",
+      "disk_type": "scsi",
+      "controller": "disk_controller",
+      "disksize": "40960",
+      "ramsize": "2048",
+      "nic_type": "e1000",
+      "xml_answerfile": "windows_answerfile_xml_goes_here",
+      "sif_answerfile": "windows_answerfile_sif_goes_here",
+      "out_dir": "output_directory_goes_here"
+    }
+  }
