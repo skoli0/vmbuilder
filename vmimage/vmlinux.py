@@ -10,15 +10,15 @@ boot_cmd = {
         "/install/vmlinuz ",
         "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<wait> ",
         "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
-        "hostname={{.Name}} ",
+        "hostname={{user `hostname`}} ",
         "fb=false debconf/frontend=noninteractive ",
         "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
         "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
         "initrd=/install/initrd.gz -- <enter>"
     ],
-    "red": ["<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg hostname={{.Name}}<enter><wait>"],
-    "centos": ["<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg hostname={{.Name}}<enter><wait>"],
-    "fedora": ["<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg hostname={{.Name}}<enter><wait>"]
+    "red": ["<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg hostname={{user `hostname`}}<enter><wait>"],
+    "centos": ["<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg hostname={{user `hostname`}}<enter><wait>"],
+    "fedora": ["<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg hostname={{user `hostname`}}<enter><wait>"]
 }
 
 class VMLinux(VMImage):
@@ -26,7 +26,7 @@ class VMLinux(VMImage):
         super().__init__(vm, "linux")
 
     def answerfile(self):
-        _input_template_file_deb = os.path.join(PACKERFILE_TEMPLATES_DIR, 'linux',
+        _input_template_file_deb = os.path.join(PACKER_TEMPLATES_DIR, 'linux',
                         'debian_based.cfg')
         self.answerfile = os.path.join(self.vmindir, 'preseed.cfg')
 
@@ -39,7 +39,7 @@ class VMLinux(VMImage):
 
     def packerfile(self):
         _input_packerfile = self.get_packerfile()
-        
+
         self.vm_packerfile = os.path.join(self.vmindir, "packerfile.json")
 
         if not os.path.exists(os.path.dirname(self.vm_packerfile)):
@@ -55,6 +55,7 @@ class VMLinux(VMImage):
         assert isinstance(data, object)
 
         data['variables']['vm_name'] = self.vm_dir
+        data['variables']['hostname'] = "packerlinux"
         data['variables']['guestos'] = "Ubuntu" #utils.get_guestos(self.vm_version, self.vm_architecture, self.vm_provider)
         data['variables']['ramsize'] = str(self.ram)
         data['variables']['disksize'] = str(self.disk)

@@ -28,4 +28,4 @@ class BuildVM(object):
         else:
             print("not a valid os type")
 
-        print(self.vm_dict)
+        #print(self.vm_dict)

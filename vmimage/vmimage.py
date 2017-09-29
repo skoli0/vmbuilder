@@ -20,13 +20,13 @@ class VMImage(object):
         self.disk = int(vm['disk']) * 1024
         self.language = vm['language']
         self.displayname = "{0} {1}bit {2}".format(self.osname, self.arch, self.language).title()
-        print(self.displayname)
+        #print(self.displayname)
         self.vm_dir = self.displayname.lower().replace(' ', '_')
-        print(self.osname, self.osfamily)
+        #print(self.osname, self.osfamily)
         self.vmindir = os.path.abspath(os.path.join(INPUT_ARTIFACTS_DIR, self.hypervisor, self.osfamily, self.vm_dir).lower())
-        print(self.vmindir)
+        #print(self.vmindir)
         self.vmoutdir = os.path.abspath(os.path.join(OUTPUT_ARTIFACTS_DIR, self.hypervisor, self.osfamily, self.vm_dir).lower())
-        print(self.vmoutdir)
+        #print(self.vmoutdir)
 
         self.steps = ['answerfile',
                       'packerfile',
@@ -67,7 +67,7 @@ class VMImage(object):
 
     def get_packerfile(self):
         """Returns the os-specific packer json template file
-        
+
         :param os_type: target image os
         :return: os specific packer json template
         """
@@ -80,7 +80,7 @@ class VMImage(object):
 
     def get_answerfile(self, os_type):
         """Returns the os-specific packer answer template file
-        
+
         :param os_type: target image os
         :return: os specific packer json template
         """
@@ -90,7 +90,7 @@ class VMImage(object):
 
         try:
             answerfiles = [sif_answerfile, xml_answerfile];
-            if all([os.path.isfile(f) for f in answerfiles]):  
+            if all([os.path.isfile(f) for f in answerfiles]):
                 return answerfiles
         except (OSError, IOError, TypeError) as e:
             logging.error('packer config file does not exist')

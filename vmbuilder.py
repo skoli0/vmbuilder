@@ -80,11 +80,7 @@ def get_args():
 def main():
     logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s - [%(levelname)s] (%(module)s:%(lineno)d) %(message)s", )
-    # Run get_args()
-    # get_args()
-    DEFAULT_HYPERVISOR = "virtualbox"
-    # Match return values from get_arguments()
-    # and assign to their respective variables
+                    
     arg_dict = get_args()
     #print(arg_dict)
 
