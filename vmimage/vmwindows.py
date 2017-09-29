@@ -6,14 +6,14 @@ class VMWindows(VMImage):
         #self.vm = vm
 
     def answerfile(self):
-        print("answerfile")
         self._sif, self._xml = self.get_answerfile(self.osfamily)
         print(self._sif, self._xml)
-        #shutil.copyfile(_input_template_file_deb, self.answerfile)
+        shutil.copy2(self._sif, self.vmindir)
+        shutil.copy2(self._xml, self.vmindir)
 
     def packerfile(self):
         _input_packerfile = self.get_packerfile()
-        
+
         self.vm_packerfile = os.path.join(self.vmindir, "packerfile.json")
 
         if not os.path.exists(os.path.dirname(self.vm_packerfile)):
@@ -46,4 +46,3 @@ class VMWindows(VMImage):
     def Build(self):
         #print("build linux " + self.vm['image'])
         self.buildimage()
-
