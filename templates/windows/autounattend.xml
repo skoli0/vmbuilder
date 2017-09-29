@@ -10,7 +10,7 @@
      <ProductKey>
        <WillShowUI>Never</WillShowUI>
        <!-- Vista's 'default' product key. Gets overriden using slmgr.vbs. -->
-       <Key> </Key>
+       <Key>%Var.ProductKey%</Key>
      </ProductKey>
     </UserData>
 
@@ -20,8 +20,8 @@
       <DiskID>0</DiskID>
       <WillWipeDisk>true</WillWipeDisk>
       <CreatePartitions>
-       
-       
+
+
        <CreatePartition>
         <Order>1</Order>
         <Type>Primary</Type>
@@ -40,7 +40,7 @@
       <InstallFrom>
        <MetaData wcm:action="add">
         <Key>/IMAGE/NAME</Key>
-        <Value>Windows Vista BUSINESS</Value>
+        <Value>%Var.VMName%</Value>
        </MetaData>
       </InstallFrom>
       <InstallTo>
@@ -54,10 +54,10 @@
    </component>
 
    <component name="Microsoft-Windows-International-Core-WinPE" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="x86">
-    <InputLocale>pl-PL</InputLocale>
-    <SystemLocale>pl-PL</SystemLocale>
-    <UILanguage>pl-PL</UILanguage>
-    <UserLocale>pl-PL</UserLocale>
+    <InputLocale>%Var.Locale%</InputLocale>
+    <SystemLocale>%Var.Locale%</SystemLocale>
+    <UILanguage>%Var.Locale%</UILanguage>
+    <UserLocale>%Var.Locale%</UserLocale>
    </component>
 
   </settings>
@@ -67,22 +67,22 @@
    <component name="Microsoft-Windows-Shell-Setup" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="x86">
     <AutoLogon>
      <Password>
-      <Value>symantec</Value> 
+      <Value>%Var.UserName%</Value>
       <PlainText>true</PlainText>
      </Password>
-     <Enabled>true</Enabled> 
-     <Username>automation</Username> 
+     <Enabled>true</Enabled>
+     <Username>%Var.Password%</Username>
     </AutoLogon>
 
     <UserAccounts>
      <LocalAccounts>
       <LocalAccount wcm:action="add">
        <Password>
-        <Value>symantec</Value>
+        <Value>%Var.UserName%</Value>
         <PlainText>true</PlainText>
        </Password>
        <Group>administrators;users</Group>
-       <Name>automation</Name>
+       <Name>%Var.Password%</Name>
       </LocalAccount>
      </LocalAccounts>
     </UserAccounts>
@@ -124,7 +124,19 @@
       <CommandLine>net accounts /MAXPWAGE:UNLIMITED</CommandLine>
       <Order>7</Order>
      </SynchronousCommand>
-    <SynchronousCommand wcm:action="add"><CommandLine>reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /t REG_SZ /d 0 /f</CommandLine><Order>8</Order></SynchronousCommand><SynchronousCommand wcm:action="add"><CommandLine>cscript.exe \windows\system32\slmgr.vbs /ipk THKPP-FD8RX-GF6XT-7G8PB-PRV2F</CommandLine><Order>9</Order></SynchronousCommand><SynchronousCommand wcm:action="add"><CommandLine>cscript.exe \windows\system32\slmgr.vbs /ato</CommandLine><Order>10</Order></SynchronousCommand></FirstLogonCommands>
+    <SynchronousCommand wcm:action="add">
+      <CommandLine>reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v AutoAdminLogon /t REG_SZ /d 0 /f</CommandLine>
+    <Order>8</Order>
+    </SynchronousCommand>
+    <SynchronousCommand wcm:action="add">
+      <CommandLine>cscript.exe \windows\system32\slmgr.vbs /ipk %Var.ProductKey%</CommandLine>
+      <Order>9</Order>
+    </SynchronousCommand>
+    <SynchronousCommand wcm:action="add">
+      <CommandLine>cscript.exe \windows\system32\slmgr.vbs /ato</CommandLine>
+      <Order>10</Order>
+    </SynchronousCommand>
+  </FirstLogonCommands>
 
     <TimeZone>Pacific Standard Time</TimeZone>
    </component>
