@@ -13,20 +13,20 @@ UnattendSwitch=Yes
 DriverSigningPolicy=Ignore
 
 [GuiUnattended]
-AdminPassword="symantec"
+AdminPassword="%Var.Password%"
 EncryptedAdminPassword=No
 OEMSkipRegional=1
 TimeZone=4
 OemSkipWelcome=1
 ServerWelcome=No
 EMSSkipUnattendProcessing=0
-EMSBlankPassword=Yes 
+EMSBlankPassword=Yes
 
 AutoLogon=Yes
 AutoLogonCount=1
 [UserData]
 ProductKey=""
-FullName="automation"
+FullName="%Var.UserName%"
 OrgName=""
 ComputerName=*
 
@@ -58,4 +58,3 @@ Command4="%TEMP%\unattend.cmd"
 [VMwareData]
 RunCmdKey=Command4
 RunCmdNoReboot="%TEMP%\unattend.cmd noautoreboot"
-
